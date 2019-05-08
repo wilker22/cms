@@ -61,6 +61,11 @@ class CategoriesController extends Controller
    
     public function destroy(Category $category)
     {
+        if($category->posts->count() >0){
+            session()->flash('error', 'Categoria não pode excluída pois está associada a Posts!');
+            return redirect()->back();
+        }
+        
         $category->delete();
 
         session()->flash('success', 'Categoria excluída com sucesso!');

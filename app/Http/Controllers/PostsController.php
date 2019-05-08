@@ -5,12 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post;
 use App\Category;
+use App\Tag;
 use App\Http\Requests\Posts\CreatePostsRequest;
 use App\Http\Requests\Posts\UpdatePostRequest;
 use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('verifyCategoriesCount')->only('create', 'store');
+    }
    
     public function index()
     {
@@ -20,7 +26,7 @@ class PostsController extends Controller
    
     public function create()
     {
-        return view('posts.create')->with('categories', Category::all());
+        return view('posts.create')->with('categories', Category::all())->with('tags', Tag::all());
     }
 
    
@@ -32,7 +38,7 @@ class PostsController extends Controller
             $image = $request->image->store('posts');
            //  
             //create the post
-            Post::create([
+           $post =  Post::create([
                 'title' => $request->title,
                 'description' => $request->description,
                 'content' => $request->content,
@@ -40,6 +46,10 @@ class PostsController extends Controller
                 'image' => $image,
                 'category_id' => $request->category
             ]);
+
+            if($request->tags){
+                $post->tags()->attach($request->tags);
+            } 
          
             //flash message
             session()->flash('success', 'Post criado com sucesso!');
@@ -67,7 +77,10 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('posts.create')->with('post', $post )->with('categories', Category::all());
+        return view('posts.create')
+            ->with('post', $post )
+            ->with('categories', Category::all())
+            ->with('tags', Tag::all());
     }
 
     /**
@@ -79,7 +92,7 @@ class PostsController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $data = $request->only(['title', 'description', 'published_at', 'content', 'category']);
+        // $data = $request->only(['title', 'description', 'published_at', 'content', 'category']);
         
         //check if new image
         if($request->hasFile('image')){
@@ -90,6 +103,10 @@ class PostsController extends Controller
             
             $data['image'] = $image;
  
+        }
+
+        if($request->tags){
+            $post->tags()->sync($request->tags);
         }
        
         //update atributes
