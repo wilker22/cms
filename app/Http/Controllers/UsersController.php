@@ -19,13 +19,13 @@ class UsersController extends Controller
 
     public function makeAdmin(User $user)
     {
-       dd($user);
+       
         $user->role = 'admin';
         $user->save();
 
         session()->falsh('success', 'Usuário com perfil de Admin, com  sucesso!');
 
-        return redirect('users.index' );
+        return redirect(route('users.index'));
      }
 
     /**

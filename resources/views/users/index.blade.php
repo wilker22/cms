@@ -17,7 +17,7 @@
                 <tbody>
                     @foreach ($users as $user)
                         <tr>
-                            <td> <img src="{{asset('/storage/'.$user->image)}}" witdth="60" height="60" alt="Imagem"></td>
+                            <td> <img src="{{Gravatar::src($user->email)}}" alt="{{$user->name}}"></td>
                            
                             <td>{{$user->name}}</td>
 
@@ -27,9 +27,8 @@
                                 <form action="{{route('users.make-admin', $user->id)}}" method="POST">
                                     @csrf
 
-                                    <td> 
-                                        <button type="submit">Make Admin</button>
-                                        <button type="submit"class="btn btn-success">Make Admin</button>
+                                    <td>                                         
+                                        <button type="submit" class="btn btn-primary">Make Admin</button>
                                     </td>
 
                                 </form>
