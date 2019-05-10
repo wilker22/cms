@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\Users\UpdateProfileRequest;
 use App\User;
 
 class UsersController extends Controller
@@ -23,7 +24,7 @@ class UsersController extends Controller
         $user->role = 'admin';
         $user->save();
 
-        session()->falsh('success', 'Usuário com perfil de Admin, com  sucesso!');
+        session()->flash('success', 'Usuário com perfil de Admin, com  sucesso!');
 
         return redirect(route('users.index'));
      }
@@ -66,9 +67,9 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
-        //
+        return view('users.edit')->with('user', auth()->user());
     }
 
     /**
@@ -78,9 +79,18 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProfileRequest $request)
     {
-        //
+        $user = auth()->user();
+        $user->update([
+            'name' => $request->name,
+            'about' => $request->about
+        ]) ;       
+
+        session()->flash('success', 'Usuário com perfil atualizado com  sucesso!');
+
+        return redirect()->back();
+
     }
 
     /**
