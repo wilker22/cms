@@ -4,6 +4,8 @@ use Illuminate\Database\Seeder;
 use App\Post;
 use App\Category;
 use App\Tag;
+use App\User;
+use Illuminate\Support\Facades\Hash;
 
 class PostsTableSeeder extends Seeder
 {
@@ -16,6 +18,18 @@ class PostsTableSeeder extends Seeder
     {
         $category1 = Category::create([
             'name' => 'news'
+        ]);
+
+        $author1 = App\User::create([
+            'name' => 'Manoel Wilker',
+            'email' => 'wilker@gmail.com',
+            'password' => Hash::make('password')
+        ]);
+
+        $author2 = App\User::create([
+            'name' => 'Jozy Viana',
+            'email' => 'jozy@gmail.com',
+            'password' => Hash::make('password')
         ]);
 
         $category2 = Category::create([
@@ -32,10 +46,11 @@ class PostsTableSeeder extends Seeder
             'content' => 'O que é Lorem Ipsum?
                                 Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos. Lorem Ipsum sobreviveu não só a cinco séculos, como também ao salto para a editoração eletrônica, permanecendo essencialmente inalterado. Se popularizou na década de 60, quando a Letraset lançou decalques contendo passagens de Lorem Ipsum, e mais recentemente quando passou a ser integrado a softwares de editoração eletrônica como Aldus PageMaker.',
             'category_id' => $category1->id,
-            'image' => 'posts/1.jpg'
+            'image' => 'posts/1.jpg',
+            'user_id' => $author1->id
         ]);
 
-        $post2 = Post::create([
+        $post2 = $author2->posts()->create([
             'title' => 'Top 5 brilliant content marketing strategies',
             'description' => 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecid',
             'content' => 'O que é Lorem Ipsum?
@@ -44,7 +59,7 @@ class PostsTableSeeder extends Seeder
             'image' => 'posts/2.jpg'
         ]);
 
-        $post3 = Post::create([
+        $post3 = $author1->posts()->create([
             'title' => 'Best practices for minimalist design with example',
             'description' => 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecid',
             'content' => 'O que é Lorem Ipsum?
@@ -53,7 +68,7 @@ class PostsTableSeeder extends Seeder
             'image' => 'posts/3.jpg'
         ]);
 
-        $post4 = Post::create([
+        $post4 = $author1->posts()->create([
             'title' => 'Congratulate and thank to Maryam for joining our team',
             'description' => 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecid',
             'content' => 'O que é Lorem Ipsum?
