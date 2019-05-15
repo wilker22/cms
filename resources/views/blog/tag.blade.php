@@ -287,7 +287,7 @@
 
 
 
-           @include('partials.sidebar')
+            @include('partials.sidebar')
 
           </div>
         </div>
