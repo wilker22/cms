@@ -10,8 +10,11 @@ use App\User;
 
 class Post extends Model
 {
-
+    protected $dates = [
+        'published_at'
+    ];
     use SoftDeletes;
+
     protected $fillable = [
         'title', 'description', 'content', 'image', 'published_at', 'category_id', 'user_id'
     ];
@@ -52,16 +55,23 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
+
+    public function scopePublished($query)
+    {
+        return $query->where('published_at', "<=", now());
+    }
+
     public function scopeSearched($query)
     {
         $search = request()->query('search');
 
         if(!$search){
-            return $query;
+            return $query->published();
         }
 
-        return $query->where('title', 'LIKE', "%{$search}%");
+        return $query->published()->where('title', 'LIKE', "%{$search}%"); 
+        
 
     }
-    
+     
 }
